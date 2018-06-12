@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -53,6 +52,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
     private Array<String> messages;
     private BitmapFont font;
     private BitmapFont gameStateWords;
+    private BitmapFont levelFont;
     private SpriteBatch batch;
     private static final int MESSAGE_MAX = 10;
 
@@ -86,6 +86,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         this.batch = new SpriteBatch();
         this.font = new BitmapFont();
         this.gameStateWords = new BitmapFont();
+        this.levelFont = new BitmapFont();
         this.messages = new Array<String>();
 
 //        // 加载背景音乐, 创建 Music 实例
@@ -118,7 +119,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         this.BIRDS_COUNT = 0;
         this.HITS = 0;
         this.BULLET_COUNT = MAX_BULLET_NUM;
-        setActors(birdsArray);
+        SetActors(birdsArray);
 
         // 设置鼠标监听器(被动监听)
         this.processorEvent = new InputProcessorEvent();
@@ -132,10 +133,6 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 //        // 给舞台添加输入监听器（包括触屏, 鼠标点击, 键盘按键 的输入）
 //        stage.addListener(new InputListener());
 
-        // 绘制文字
-        font = new BitmapFont();
-        Thread thread = new Thread();
-        thread.start();
     }
 
     @Override
@@ -151,7 +148,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         // 绘制message
         batch.begin();
         for (int i = 0; i < messages.size; ++i) {
-            font.draw(batch, messages.get(i), 20.0f, 480 - 40.0f * (i + 1));
+            font.draw(batch, messages.get(i), 20.0f, WORLD_HEIGHT - 40.0f * (i + 1));
         }
 
         String words = "Current birds: " + BIRDS_COUNT + "\nLeft bullets: " + BULLET_COUNT + "\nScore: " + SCORE + "\nHits: " + HITS;
@@ -159,7 +156,31 @@ public class MainGame extends InputAdapter implements ApplicationListener{
                 words,
                 20.0f,
                 80.0f);
+
+
+        String levelWords = "LEVEL:" + birdsGroup.getLevel();
+
+        // 游戏等级设定
+        if(HITS < 15) {
+            birdsGroup.setLevel(1);
+        }
+        else if (HITS < 30 && HITS >= 15)
+        {
+            birdsGroup.setLevel(2);
+            levelWords = "LEVEL:" + birdsGroup.getLevel() + "\nAlready hits" + HITS+"birds!" + "\nAccelerate the speed!\n";
+        }
+        else if (HITS >= 30) {
+            birdsGroup.setLevel(3);
+            levelWords = "LEVEL:" + birdsGroup.getLevel() + "\nAlready hits" + HITS+"birds!" + "\nThe speed gets faster!\n";
+        }
+
+        levelFont.draw(batch,
+                levelWords,
+                (WORLD_WIDTH - 150.0f),
+                (WORLD_HEIGHT - 20.0f));
+
         batch.end();
+
 
         Actor[] bullet = bulletsGroup.getChildren().begin();
         Actor[] bird = birdsGroup.getChildren().begin();
@@ -186,7 +207,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
                     // 生成一只相同的掉落鸟
                     BaseActor fallBird = new BaseActor(((BaseActor) target).getRegion());
-                    fallBird.setPosition(target.getX()+target.getWidth()/2, target.getY()+target.getHeight()/2);
+                    fallBird.setPosition(target.getX() + target.getWidth()/2, target.getY() + target.getHeight()/2);
                     fallBird.setOrigin(target.getWidth()/2, target.getHeight()/2);
                     float fallBirdSpeed = ((BaseActor) target).getFlySpeed();
                     // 掉落鸟保持原来的水平飞行速度
@@ -200,7 +221,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
                     // 删除原鸟
                     birdsGroup.removeActor(target);
                     // 再添加一只鸟飞入
-                    birdsGroup.addOneBird(birdsArray);
+                    birdsGroup.addOneBird(birdsArray, birdsGroup.getLevel());
                     this.BIRDS_COUNT ++;
                     SCORE+=10;
                     break;
@@ -219,8 +240,8 @@ public class MainGame extends InputAdapter implements ApplicationListener{
                     hitSound.play();
                     bulletsGroup.removeActor(actor);
                     deadGroup.removeActor(target);
-                    // 增加十个子弹
-                    BULLET_COUNT += 10;
+                    // 增加3个子弹
+                    BULLET_COUNT += 3;
                     // 增加100分
                     SCORE += 100;
                 }
@@ -379,7 +400,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         }
     }
 
-    private void setActors(String[] birdsArray) {
+    private void SetActors(String[] birdsArray) {
         // 放置炮台
         this.pao = new Texture("弓箭.png");
         paoActor = new BaseActor(new TextureRegion(pao));
@@ -387,8 +408,9 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         paoActor.setOrigin(paoActor.getWidth()/2, 0);
         stage.addActor(paoActor);
 
+        int level = 1;
         // 添加5只鸟，每击落一只鸟，就添加一只新的鸟
-        this.birdsGroup = new BirdsGroup(birdsArray, 5, WORLD_WIDTH, WORLD_HEIGHT);
+        this.birdsGroup = new BirdsGroup(birdsArray, 5, WORLD_WIDTH, WORLD_HEIGHT, level);
         this.BIRDS_COUNT = 5;
         stage.addActor(birdsGroup);
 
@@ -419,8 +441,6 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         bulletsGroup.clearChildren();
         GameOver.addAction(Popup);
         tryAgain.setPosition(0, stage.getHeight() - tryAgain.getHeight());
-        tryAgain.addListener(new tryAgainListener());
-
     }
 
     private void RestartGame() {
@@ -432,21 +452,11 @@ public class MainGame extends InputAdapter implements ApplicationListener{
             this.GAME_STATE = PLAY;
             restartSound.play();
             this.HITS = 0;
-            this.birdsGroup = new BirdsGroup(birdsArray, 5, WORLD_WIDTH, WORLD_HEIGHT);
+            this.birdsGroup = new BirdsGroup(birdsArray, 5, WORLD_WIDTH, WORLD_HEIGHT, 1);
             this.BIRDS_COUNT = 5;
             stage.addActor(birdsGroup);
             this.BULLET_COUNT = MAX_BULLET_NUM;
             this.SCORE = 0;
-        }
-    }
-
-    private class tryAgainListener extends ClickListener {
-
-        @Override
-        public void clicked(InputEvent event, float x, float y) {
-            // 获取响应这个点击事件的演员
-            Actor actor = event.getListenerActor();
-            Gdx.app.log(TAG, "被点击: " + x + ", " + y + "; Actor: " + actor.getClass().getSimpleName());
         }
     }
 }

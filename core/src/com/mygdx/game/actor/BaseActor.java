@@ -5,9 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-/**
- * 小鸟儿
- */
 public class BaseActor extends Actor {
 
     // 用于展示该演员的纹理区域

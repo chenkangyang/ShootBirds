@@ -1,5 +1,6 @@
 package com.mygdx.game.ActorGroup;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -15,11 +16,13 @@ public class BirdsGroup extends Group {
     BaseActor bird;
     static float worldWidth;
     static float worldHeight;
+    int level;
 
-    public BirdsGroup(String[] birdsArray, int num, float width, float height)
+    public BirdsGroup(String[] birdsArray, int num, float width, float height, int level)
     {
         worldWidth = width;
         worldHeight = height;
+        this.level = level;
         for (int i = 0; i < num; i++) {
             // 生成一只鸟
             String birdName = birdsArray[(int) (Math.random() * birdsArray.length)];
@@ -31,7 +34,25 @@ public class BirdsGroup extends Group {
             bird.setOrigin(bird.getWidth() / 2, bird.getHeight() / 2);
 
             // 添加飞行效果
-            float speed = MathUtils.random(2, 7);
+            float speed = 0;
+
+            switch (level) {
+                case 1: {
+                    speed = MathUtils.random(2, 7);
+                    break;
+                }
+                case 2: {
+                    speed = MathUtils.random(1, 2);
+                    break;
+                }
+                case 3: {
+                    speed = MathUtils.random(0.5f, 1);
+                    break;
+                }
+                default:
+                    speed = MathUtils.random(2, 7);
+                    break;
+            }
             bird.setFlySpeed(speed);
             fly(bird, bird.flySpeed);
 
@@ -58,7 +79,7 @@ public class BirdsGroup extends Group {
         bird.addAction(repeatAction);
     }
 
-    public void addOneBird(String[] birdsArray) {
+    public void addOneBird(String[] birdsArray, int level) {
         // 生成一只鸟
         String birdName = birdsArray[(int) (Math.random() * birdsArray.length)];
         Texture img = new Texture(birdName);
@@ -67,10 +88,38 @@ public class BirdsGroup extends Group {
         double flyHeight = MathUtils.random(worldHeight/2, worldHeight-bird.getHeight());
         bird.setPosition(-bird.getWidth(), (float) flyHeight);
         bird.setOrigin(bird.getWidth() / 2, bird.getHeight() / 2);
-        float speed = MathUtils.random(2, 7);
+
+        float speed = 0;
+
+        switch (level) {
+            case 1: {
+                speed = MathUtils.random(2, 7);
+                break;
+            }
+            case 2: {
+                speed = MathUtils.random(1, 2);
+                break;
+            }
+            case 3: {
+                speed = MathUtils.random(0.5f, 1);
+                break;
+            }
+            default:
+                speed = MathUtils.random(2, 7);
+                break;
+        }
+
         bird.setFlySpeed(speed);
         // 添加飞行效果
         fly(bird, bird.flySpeed);
         this.addActor(bird); //添加到组中
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return this.level;
     }
 }
