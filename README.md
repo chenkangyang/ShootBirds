@@ -10,7 +10,11 @@ ShootBirds Game using libgdx
 ### 只打包了桌面端的程序
 
 ```
+LINUX:
 ./gradlew desktop:dist
+
+WINDOWS:
+gradlew.bat desktop:dist
 
 ```
 
@@ -20,6 +24,17 @@ Generates a fat jar in desktop/build/libs directory that you can run with
 ```
 java -jar desktop-1.0.jar
 ```
+
+### DEBUG
+```
+配置选择"Java Apllication"
+
+desktop/src/com/mygdx/game/desktop/DesktopLauncher.java
+作为主类(Main Class),
+
+/Users/alex/Documents/2018/2018_Projecs/ShootBirds/core/assets
+作为工作目录(Working directory) (改成自己的assets文件夹所在目录)
+``` 
 
 ## 游戏玩法：
 初始有**100颗**子弹，**50只**鸟。
