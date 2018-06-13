@@ -34,6 +34,9 @@ public class MainGame extends InputAdapter implements ApplicationListener{
     private Texture pao;
     private BaseActor paoActor;
 
+    private Texture bgImg;
+    private BaseActor bgActor;
+
     private static final int PLAY = 1;
     private static final int OVER = -1;
 
@@ -91,8 +94,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
 //        // 加载背景音乐, 创建 Music 实例
 //         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.ogg"));
-//        // 背景音乐设置循环播放
-//        backgroundMusic.setLooping(true);
+
 //
 //        // 设置音量, 值范围 0.0 ~ 1.0
 //        // music.setVolume(float volume);
@@ -111,6 +113,13 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         hitSound = Gdx.audio.newSound(Gdx.files.internal("audio/hit.ogg"));
         overSound = Gdx.audio.newSound(Gdx.files.internal("audio/die.ogg"));
         restartSound = Gdx.audio.newSound(Gdx.files.internal("audio/restart.ogg"));
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("audio/bgm.mp3"));
+
+        // 背景音乐设置循环播放
+        backgroundMusic.setLooping(true);
+
+        backgroundMusic.play();
+
 
         // 使用伸展视口（StretchViewport）创建舞台
         this.stage = new Stage(new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT));
@@ -261,11 +270,13 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         if (BIRDS_COUNT == MAX_BIRD_NUM) {
             this.GAME_STATE = OVER;
             overSound.play();
+            backgroundMusic.stop();
             ShowGameOverTips();
         }
         else if (BULLET_COUNT == 0) {
             this.GAME_STATE = OVER;
             overSound.play();
+            backgroundMusic.stop();
             ShowGameOverTips();
         }
     }
@@ -292,6 +303,10 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         // 释放音效
         if (overSound != null) {
             overSound.dispose();
+        }
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.dispose();
         }
         // 释放舞台资源
         if (stage != null) {
@@ -401,6 +416,12 @@ public class MainGame extends InputAdapter implements ApplicationListener{
     }
 
     private void SetActors(String[] birdsArray) {
+        // 设置背景
+        bgActor = new BaseActor(new TextureRegion(new Texture("back.jpg")));
+        bgActor.setPosition(0,0);
+        bgActor.setOrigin(bgActor.getWidth()/2, bgActor.getHeight()/2);
+        stage.addActor(bgActor);
+
         // 放置炮台
         this.pao = new Texture("弓箭.png");
         paoActor = new BaseActor(new TextureRegion(pao));
@@ -432,6 +453,9 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         tryAgain.setPosition( -tryAgain.getWidth(), stage.getHeight() - tryAgain.getHeight());
         tryAgain.setOrigin(tryAgain.getWidth()/2, tryAgain.getHeight()/2);
         stage.addActor(tryAgain);
+
+
+
     }
 
     private void ShowGameOverTips() {
@@ -451,6 +475,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
             this.GAME_STATE = PLAY;
             restartSound.play();
+            backgroundMusic.play();
             this.HITS = 0;
             this.birdsGroup = new BirdsGroup(birdsArray, 5, WORLD_WIDTH, WORLD_HEIGHT, 1);
             this.BIRDS_COUNT = 5;
