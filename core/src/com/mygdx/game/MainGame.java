@@ -34,7 +34,6 @@ public class MainGame extends InputAdapter implements ApplicationListener{
     private Texture pao;
     private BaseActor paoActor;
 
-    private Texture bgImg;
     private BaseActor bgActor;
 
     private static final int PLAY = 1;
@@ -92,22 +91,6 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         this.levelFont = new BitmapFont();
         this.messages = new Array<String>();
 
-//        // 加载背景音乐, 创建 Music 实例
-//         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.ogg"));
-
-//
-//        // 设置音量, 值范围 0.0 ~ 1.0
-//        // music.setVolume(float volume);
-//
-//        // 手动暂停播放, 暂停播放后调用 play() 将从暂停位置开始继续播放
-//        // music.pause();
-//
-//        // 手动停止播放, 停止播放后调用 play() 将从头开始播放
-//        // music.stop();
-//
-//        // 手动播放音乐, 这里游戏启动时开始播放背景音乐
-//        backgroundMusic.play();
-
         // 加载各音效
         shootSound = Gdx.audio.newSound(Gdx.files.internal("audio/touch.ogg"));
         hitSound = Gdx.audio.newSound(Gdx.files.internal("audio/hit.ogg"));
@@ -123,6 +106,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
         // 使用伸展视口（StretchViewport）创建舞台
         this.stage = new Stage(new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT));
+//        this.stage = new Stage(WORLD_WIDTH, WORLD_HEIGHT);
 
         // 设置炮台和小鸟儿
         this.BIRDS_COUNT = 0;
@@ -283,7 +267,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height);
     }
 
     @Override
@@ -395,7 +379,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         @Override
         public boolean mouseMoved(int screenX, int screenY) {
             // 设置炮台指向鼠标
-            int rotateDegree = (int) (Math.toDegrees(Math.atan2((stage.getHeight() - screenY) ,(screenX - paoActor.getX())))-90);
+            int rotateDegree = (int) (Math.toDegrees(Math.atan2((stage.getViewport().getScreenHeight() - screenY) ,(screenX - paoActor.getX())))-90);
             paoActor.setRotation(rotateDegree);
             // addMessage("mouseMoved: screenX(" + screenX + ") screenY(" + screenY + ")" + "degree" + rotateDegree+90);
             return true;
