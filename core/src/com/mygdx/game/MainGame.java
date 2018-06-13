@@ -107,7 +107,6 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
         // 使用伸展视口（StretchViewport）创建舞台
         this.stage = new Stage(new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT));
-//        this.stage = new Stage(WORLD_WIDTH, WORLD_HEIGHT);
 
         // 设置炮台和小鸟儿
         this.BIRDS_COUNT = 0;
@@ -119,13 +118,6 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         this.processorEvent = new InputProcessorEvent();
         Gdx.input.setInputProcessor(processorEvent);
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Crosshair); // 设置准星形状，哈哈好像没用呢！
-
-//        // 首先必须注册输入处理器（stage）, 将输入的处理设置给 舞台（Stage 实现了 InputProcessor 接口）（手动监听）
-//        // 这样舞台才能接收到输入事件, 分发给相应的演员 或 自己处理。
-//        Gdx.input.setInputProcessor(stage);
-//
-//        // 给舞台添加输入监听器（包括触屏, 鼠标点击, 键盘按键 的输入）
-//        stage.addListener(new InputListener());
 
     }
 
@@ -161,11 +153,11 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         else if (HITS < 30 && HITS >= 15)
         {
             birdsGroup.setLevel(2);
-            levelWords = "LEVEL:" + birdsGroup.getLevel() + "\nAlready hits" + HITS+"birds!" + "\nAccelerate the speed!\n";
+            levelWords = "LEVEL:" + birdsGroup.getLevel() + "\nAlready hits " + HITS+" birds!" + "\nAccelerate the speed!\n";
         }
         else if (HITS >= 30) {
             birdsGroup.setLevel(3);
-            levelWords = "LEVEL:" + birdsGroup.getLevel() + "\nAlready hits" + HITS+"birds!" + "\nThe speed gets faster!\n";
+            levelWords = "LEVEL:" + birdsGroup.getLevel() + "\nAlready hits " + HITS+" birds!" + "\nThe speed gets faster!\n";
         }
 
         levelFont.draw(batch,
@@ -201,7 +193,6 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
                     // 生成一只相同的掉落鸟
                     BaseActor fallBird = new BaseActor(((BaseActor) target).getRegion());
-//                    fallBird.setScale(0.3f);
                     fallBird.setPosition(target.getX() + target.getWidth()/2, target.getY() + target.getHeight()/2);
                     fallBird.setOrigin(target.getWidth()/2, target.getHeight()/2);
 
@@ -331,7 +322,6 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-            // 限制子弹的数量为5个
             // addMessage("touchDown: screenX(" + screenX + ") screenY(" + screenY + ")");
 
             Vector3 vector3 = new Vector3(screenX, screenY, 0);
@@ -347,7 +337,8 @@ public class MainGame extends InputAdapter implements ApplicationListener{
                 }
             }
 
-            if (bulletsGroup.getChildren().size >=5) {
+            // 限制子弹的数量为5个
+            if (bulletsGroup.getChildren().size >= 5) {
                 return false;
             }
 
