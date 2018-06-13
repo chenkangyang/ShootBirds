@@ -41,7 +41,8 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
     private static final float WORLD_WIDTH = 640;
     private static final float WORLD_HEIGHT = 480;
-    private static final String[] birdsArray = {"鸵鸟.png","爱情鸟.png","红鸟.png","黑鸟.png", "小小鸟.png"};
+    private static final String[] birdsArray = {"红色老鸟.png","急冻鸟.png","白色雌鸟.png","粉红鸟.png",
+            "红色呆鸟.png", "红色雄鸟.png", "红色雌鸟.png", "绿鸟.png", "花花鸟.png", "黄鸟.png", "黑色鸟.png"};
     private static final int MAX_BIRD_NUM  = 50;
     private static final int MAX_BULLET_NUM  = 100;
     private int GAME_STATE;
@@ -200,10 +201,13 @@ public class MainGame extends InputAdapter implements ApplicationListener{
 
                     // 生成一只相同的掉落鸟
                     BaseActor fallBird = new BaseActor(((BaseActor) target).getRegion());
+//                    fallBird.setScale(0.3f);
                     fallBird.setPosition(target.getX() + target.getWidth()/2, target.getY() + target.getHeight()/2);
                     fallBird.setOrigin(target.getWidth()/2, target.getHeight()/2);
-                    float fallBirdSpeed = ((BaseActor) target).getFlySpeed();
+
+
                     // 掉落鸟保持原来的水平飞行速度
+                    float fallBirdSpeed = ((BaseActor) target).getFlySpeed();
                     BirdsGroup.fly(fallBird, fallBirdSpeed);
                     // 设置其状态为掉落
                     fallBird.setBirdState(BaseActor.FALL);
@@ -407,7 +411,7 @@ public class MainGame extends InputAdapter implements ApplicationListener{
         stage.addActor(bgActor);
 
         // 放置炮台
-        this.pao = new Texture("弓箭.png");
+        this.pao = new Texture("98k.png");
         paoActor = new BaseActor(new TextureRegion(pao));
         paoActor.setPosition((stage.getWidth() - paoActor.getWidth())/2, 0);
         paoActor.setOrigin(paoActor.getWidth()/2, 0);

@@ -29,10 +29,11 @@ public class BirdsGroup extends Group {
             Texture img = new Texture(birdName);
 
             bird = new BaseActor(new TextureRegion(img));
+//            bird.setScale(0.3f);
+
             double flyHeight = MathUtils.random(worldHeight/2, worldHeight-bird.getHeight());
             bird.setPosition(-bird.getWidth(), (float) flyHeight);
             bird.setOrigin(bird.getWidth() / 2, bird.getHeight() / 2);
-
             // 添加飞行效果
             float speed = 0;
 
@@ -85,6 +86,7 @@ public class BirdsGroup extends Group {
         Texture img = new Texture(birdName);
 
         bird = new BaseActor(new TextureRegion(img));
+//        bird.setScale(0.3f);
         double flyHeight = MathUtils.random(worldHeight/2, worldHeight-bird.getHeight());
         bird.setPosition(-bird.getWidth(), (float) flyHeight);
         bird.setOrigin(bird.getWidth() / 2, bird.getHeight() / 2);
@@ -108,7 +110,6 @@ public class BirdsGroup extends Group {
                 speed = MathUtils.random(2, 7);
                 break;
         }
-
         bird.setFlySpeed(speed);
         // 添加飞行效果
         fly(bird, bird.flySpeed);
