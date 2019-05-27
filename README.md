@@ -34,7 +34,7 @@ desktop/src/com/mygdx/game/desktop/DesktopLauncher.java
 
 /Users/alex/Documents/2018/2018_Projecs/ShootBirds/core/assets
 作为工作目录(Working directory) (改成自己的assets文件夹所在目录)
-``` 
+```
 
 ## 游戏玩法：
 初始有**100颗**子弹，**50只**鸟。
@@ -57,6 +57,4 @@ desktop/src/com/mygdx/game/desktop/DesktopLauncher.java
 
 ### 游戏截图
 
-![gif](/成品jar包/shoot-birds.gif)
-
-<!-- ![shoot-birds.gif](http://blog.nuptalex.xyz/shoot-birds.gif) -->
+![shoot-birds.gif](http://blog.nuptalex.xyz/shoot-birds.gif)
