@@ -55,3 +55,8 @@ desktop/src/com/mygdx/game/desktop/DesktopLauncher.java
 
 游戏界面左下角实时显示剩余子弹，当前得分，已出现的鸟数量。
 
+### 游戏截图
+
+![gif](/成品jar包/shoot-birds.gif)
+
+<!-- ![shoot-birds.gif](http://blog.nuptalex.xyz/shoot-birds.gif) -->
